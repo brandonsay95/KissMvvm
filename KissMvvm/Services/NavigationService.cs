@@ -42,7 +42,10 @@ namespace KissMvvm.Services
         {
             var instance = (T)Activator.CreateInstance(typeof(T),arguments);
             this.CurrentViewModel = instance;
-            var viewType = navigations.First(o => o.ViewModel == typeof(T));
+            var viewType = navigations.FirstOrDefault(o => o.ViewModel == typeof(T));
+            if (viewType == null)
+                throw new Exception($"Route '{typeof(T).Name}' associated view Does not exist in the registry");
+
             var viewInstance = (UserControl)Activator.CreateInstance(viewType.View);
             viewInstance.DataContext = instance;
             this.CurrentView = viewInstance;
@@ -63,7 +66,10 @@ namespace KissMvvm.Services
         }
         public void Navigate(string url,object arguments = null)
         {
-            var part = navigations.First(o => o.Route == url);
+            var part = navigations.FirstOrDefault(o => o.Route == url);
+            if (part == null)
+                throw new Exception($"Route '{url}' Does not exist in the registry");
+
             var instance = (ViewModelBase)activate(part.ViewModel, arguments);
 
             this.CurrentViewModel = instance;
@@ -104,6 +110,8 @@ namespace KissMvvm.Services
                     throw new Exception($"Type:{model.Name}, Does not have a View {viewType}");
                 this.navigations.Add(new NavigationPart(model, viewType, route));
             }
+            if (this.navigations.Count == 0)
+                throw new Exception("No pairs found, You Must have a view model class that inherits 'ViewModelBase' and ends with ViewModel to use autowire, Either turn off autowire or create such a class");
         }
     }
 }

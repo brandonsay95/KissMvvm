@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace KissMVVM
+namespace KissMvvm
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -22,7 +22,10 @@ namespace KissMVVM
     {
         public MainWindow()
         {
+            
             InitializeComponent();
+
         }
+
     }
 }

@@ -20,6 +20,10 @@ public class Startup
         [STAThread]
         public static void Main(string[] args)=> new App(new NavigationService(true),"Home",true);
 
+        or 
+        
+        public static void Main(string[] args) => new App(new KissMvvm.ViewModels.MainViewModel("Ghost Conductor",400,400,new NavigationService(true)), "Home", true);//custom title and width and height
+
         
     }
 ```
