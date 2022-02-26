@@ -16,7 +16,10 @@ namespace KissMvvm.Commands
 
         public virtual bool CanExecute(object parameter) => true;
         public virtual void Execute(object parameter) { }
-
+        public void ExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, new EventArgs());
+        }
     }
     public class RelayCommand : CommandBase
     {
@@ -26,7 +29,7 @@ namespace KissMvvm.Commands
 
         private readonly Func<object, bool> canExecute;
         private readonly Action<object> execute;
-
+        
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute)
         {
             this.canExecute = canExecute;

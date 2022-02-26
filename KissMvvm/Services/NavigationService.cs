@@ -25,12 +25,16 @@ namespace KissMvvm.Services
     }
     public class NavigationService:NotificationBase
     {
+        private List<object> injection = new List<object>();
         private List<NavigationPart> navigations = new List<Services.NavigationPart>();
         private ViewModelBase _currentViewModel;
         public ViewModelBase CurrentViewModel { get => _currentViewModel; private set { _currentViewModel = value;OnPropertyChanged(); } }
 
         private UserControl _currentView;
-
+        public void Inject(object o)
+        {
+            injection.Add(o);
+        }
         public NavigationService(bool autoWire=false)
         {
             if (autoWire)
@@ -61,7 +65,28 @@ namespace KissMvvm.Services
             else if(constructorToUse.GetParameters().Length==0)
                 return Activator.CreateInstance(type);
             else
-                return Activator.CreateInstance(type, arguments);
+            {
+                var p = constructorToUse.GetParameters().ToList();
+                List<object> pars = new List<object>();
+                foreach(var par in p)
+                {
+                    bool hasfoundMatch = false;
+                    foreach(var o in injection)
+                    {
+                        if (o.GetType() == par.ParameterType)
+                        {
+                            pars.Add(o);
+                            hasfoundMatch = true;
+                            break;
+                        }
+                        if (!hasfoundMatch)
+                            throw new Exception("Could not resolve parameter " + par.ParameterType.Name);
+                    }
+                }
+                return Activator.CreateInstance(type, pars.ToArray());
+
+
+            }
 
         }
         public void Navigate(string url,object arguments = null)
