@@ -6,7 +6,7 @@ namespace KissMvvm.ViewModels
     {
         private NavigationService _navigationService;
         public NavigationService NavigationService { get { return _navigationService; } set { _navigationService = value; OnPropertyChanged(); } }
-        public MainViewModel(string title, double width, double height,Services.NavigationService navigationService)
+        public MainViewModel(App app, string title, double width, double height, Services.NavigationService navigationService) : base(app)
         {
             this.NavigationService = navigationService;
 

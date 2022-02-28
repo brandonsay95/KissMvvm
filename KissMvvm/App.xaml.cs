@@ -15,6 +15,7 @@ namespace KissMvvm
     /// </summary>
     public partial class App : Application
     {
+        public event EventHandler<App> OnAppExit;
         public object Class { get; set; }
         private readonly NavigationService navigationService;
         private readonly MainViewModel mainViewModel;
@@ -42,7 +43,8 @@ namespace KissMvvm
             if(this.mainViewModel!=null)
                  navigationService.Inject(this.mainViewModel);
             navigationService.Inject(this.navigationService);
-            navigationService.Inject(this.window);
+            //navigationService.Inject(this.window);
+            navigationService.Inject(this);
 
         }
         //Deprecated
@@ -68,7 +70,7 @@ namespace KissMvvm
                     window = new KissMvvm.MainWindow() { DataContext = mainViewModel};
                 else
                 {
-                    var mainViewModel = new MainViewModel("KISS(Change ME)", 400, 800, navigationService);
+                    var mainViewModel = new MainViewModel(this,"KISS(Change ME)", 400, 800, navigationService);
                     this.navigationService.Inject(mainViewModel);
                     window = new KissMvvm.MainWindow() { DataContext = mainViewModel };
                 }
@@ -83,6 +85,7 @@ namespace KissMvvm
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             onAppClose?.Invoke(this,this.window);
+            OnAppExit?.Invoke(this,this);
         }
     }
 }

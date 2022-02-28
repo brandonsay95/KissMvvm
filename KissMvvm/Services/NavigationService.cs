@@ -79,9 +79,10 @@ namespace KissMvvm.Services
                             hasfoundMatch = true;
                             break;
                         }
-                        if (!hasfoundMatch)
-                            throw new Exception("Could not resolve parameter " + par.ParameterType.Name);
+                        
                     }
+                    if (!hasfoundMatch)
+                        throw new Exception("Could not resolve parameter " + par.ParameterType.Name);
                 }
                 return Activator.CreateInstance(type, pars.ToArray());
 
